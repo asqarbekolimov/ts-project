@@ -9,6 +9,7 @@ import { AddShoppingCart } from "@mui/icons-material";
 // Styles
 import { Wrapper, StyledButton } from "./App.styles";
 import Item from "./components/item/item";
+import Cart from "./components/cart/cart";
 
 //Types
 export type CartItemType = {
@@ -33,8 +34,22 @@ function App() {
     getProducts
   );
 
-  const getTotalItems = (items: CartItemType[]) => null;
-  const handleAddToCart = (clickedItem: CartItemType) => null;
+  const getTotalItems = (items: CartItemType[]) =>
+    items.reduce((ack: number, item) => ack + item.amount, 0);
+  const handleAddToCart = (clickedItem: CartItemType) => {
+    setCartItems((prev) => {
+      const isItemInCart = prev.find((item) => item.id === clickedItem.id);
+
+      if (isItemInCart) {
+        return prev.map((item) =>
+          item.id === clickedItem.id
+            ? { ...item, amount: item.amount + 1 }
+            : item
+        );
+      }
+      return [...prev, { ...clickedItem, amount: 1 }];
+    });
+  };
   const handleRemoveFromCart = () => null;
 
   if (isLoading) return <LinearProgress />;
@@ -46,7 +61,11 @@ function App() {
         open={isCartOpen}
         onClose={() => setIsCartOpen(false)}
       >
-        Cart Here
+        <Cart
+          cartItems={cartItems}
+          addToCart={handleAddToCart}
+          removeFromCart={handleRemoveFromCart}
+        />
       </Drawer>
       <StyledButton onClick={() => setIsCartOpen(true)}>
         <Badge badgeContent={getTotalItems(cartItems)} color="error">
