@@ -1,3 +1,5 @@
-import { default as Item } from "./item/item";
-import { default as Cart } from "./cart/cart";
-import { default as CartItem } from "./cart-item/cart-item";
+import Item from "./item/item.tsx";
+import Cart from "./cart/cart";
+import CartItem from "./cart-item/cart-item";
+
+export default { Item, Cart, CartItem };
